@@ -1,7 +1,6 @@
 import io
 import os
 
-import pandas as pd
 import requests
 from dotenv import load_dotenv
 
@@ -9,12 +8,14 @@ from dotenv import load_dotenv
 # Load .env file if present
 load_dotenv()
 
-ENDPOINT = "task1"
+ENDPOINT = "task2"
 
 
 API_TOKEN = os.getenv("TEAM_TOKEN")
 SERVER_URL = os.getenv("SERVER_URL")
-PARQUET_FILE = "chebi_submission_example.parquet"
+# Change accordingly
+JSONL_FILE = "path/to/context_file.jsonl"
+STAGE = "practice"
 
 def main():
     if not API_TOKEN:
@@ -27,27 +28,19 @@ def main():
             "SERVER_URL not defined. Define SERVER_URL in .env"
         )
 
-    try:
-        df = pd.read_parquet(PARQUET_FILE)
-    except Exception as e:
-        raise FileExistsError(f"Parquet file did not load properly, error {e}")
-    
-    # show example parquet data and df structure
-    print(df)
-
     headers = {
         "X-API-Token": API_TOKEN
     }
 
-    # load dataframe into buffer
-    buffer = io.BytesIO()
-    df.to_parquet(buffer, index=False)
-    buffer.seek(0)
+    data = {
+        "stage": STAGE,
+    }
 
-    # Important, the name of key in files - "parquet_file" must be exact
+    # Important, the name of key in files - "jsonl_file" must be exact
     response = requests.post(
         f"{SERVER_URL}/{ENDPOINT}",
-        files={"parquet_file": buffer},
+        files={"jsonl_file": open(JSONL_FILE, "rb")},
+        data=data,
         headers=headers
     )
 
