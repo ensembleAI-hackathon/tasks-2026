@@ -71,7 +71,6 @@ Please make sure to respect these limits:
 ---
 
 # Submitting Results
-
 To submit results for a task, run:
 
 ```bash
@@ -80,6 +79,8 @@ python3 example_submission.py
 
 After submission, the server will return a **request ID**.  
 This ID can be used to check the processing status of your submission.
+
+**The submission must be send from athena** 
 
 ---
 
